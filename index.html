@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <title>Solidity Web3.js DApp Pricing Application using Bootstrap</title>
+    <!-- Bootstrap core CSS  -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+      <h5 class="my-0 mr-md-auto font-weight-normal">Web3.js DApp Simple Pricing</h5>
+      <nav class="my-2 my-md-0 mr-md-3">
+        <a class="p-2 text-dark" href="#">Pricing</a>
+      </nav>
+      <a class="btn btn-outline-primary" href="#">Login</a>
+    </div>
+
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+      <h1 class="display-4">Pricing</h1>
+      <p class="lead">This DApp pricing example is developed using web3.js and bootstrap</p>
+    </div>
+
+    <div class="container">
+      <div class="card-deck mb-3 text-center" id="packages-list">
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Beginner</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">♦<span class="p1">0.1</span> <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>10 users included</li>
+              <li>2 GB of storage</li>
+              <li>Email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="btn btn-lg btn-block btn- price-btn">Pay <span class="price p1">0.1</span> ETH</button>
+          </div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Pro</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">♦<span class="p2">0.5</span> <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>20 users included</li>
+              <li>10 GB of storage</li>
+              <li>Priority email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="btn btn-lg btn-block btn- price-btn">Pay <span class="price p2">0.5</span> ETH</button>
+          </div>
+        </div>
+        <div class="card mb-4 box-shadow">
+          <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Enterprise</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">♦<span class="p3">1.0</span> <small class="text-muted">/ mo</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>30 users included</li>
+              <li>15 GB of storage</li>
+              <li>Phone and email support</li>
+              <li>Help center access</li>
+            </ul>
+            <button type="button" class="btn btn-lg btn-block btn- price-btn">Pay <span class="price p3">1.0</span> ETH</button>
+          </div>
+        </div>
+      </div>
+
+      <footer class="pt-4 my-md-5 pt-md-5 border-top">
+        <div class="row">
+          <div class="col-12 col-md">
+            <img class="mb-2" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">
+            <small class="d-block mb-3 text-muted">&copy; 2018</small>
+          </div>
+        </div>
+      </footer>
+    </div>
+	
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./node_modules/bignumber.js/bignumber.min.js"></script>
+	<script type="text/javascript" src="./node_modules/web3/dist/web3.min.js"></script>
+  </body>
+</html>
+
+
+<script>
+	// ABI Code of the compiled SimplePricing.sol contract
+	var abi_code = "INSERT_ABI_CODE_HERE";
+	
+	// Address of the published contract
+	var cont_addr = "INSERT_CONTRACT_ADDRESS_HERE";
+	
+	if (typeof web3 !== 'undefined') { //check if web3 object is already created
+		web3 = new Web3(web3.currentProvider); //Assign the current web3 provider to tis contract 
+	} else {
+		// Set the provider you want from Web3.providers in my case its http://localhost:8545
+		web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	}
+	
+	// You can assign any eth account to this web3 object.
+	web3.eth.defaultAccount = web3.eth.accounts[0];
+
+	// Create a contract using given abi_code
+	var PricingContract = web3.eth.contract(abi_code);
+
+	/*
+		There are multiple instances of the same ABI Code so you need to specify which contract to point
+		You can get the contract address once you publish the contract on ethereum blockchain or any test network
+	*/
+	var Pricing = PricingContract.at(cont_addr);
+	
+	// You can log it to check values if you like
+	console.log(Pricing);
+
+	// Check if current users exists and/or paid
+	Pricing.getUser({from: web3.eth.defaultAccount, gas: 3000000, value: 0}, function(error, _results){
+		// _results variable returns all the values returned from the function either single or multiple.
+		if(_results[3]) {
+			console.log(_results[3]);
+			// Get the book price from the contract by default the price is in wei then
+			// You can convert the wei value to ether using the fromWei function of web3 object
+			var user_package = web3.fromWei(_results[1].toString(), 'ether');
+			
+			var p1_val = web3.fromWei(Pricing.tone().toString(), 'ether');
+			var p2_val = web3.fromWei(Pricing.ttwo().toString(), 'ether');
+			var p3_val = web3.fromWei(Pricing.tthree().toString(), 'ether');
+			if(p1_val == user_package || p2_val == user_package || p3_val == user_package){
+				$("#packages-list").html('<div class="alert alert-primary mx-auto" role="alert">Already subscribed and paid '+user_package+' ETH</div>');
+			}else{
+				$(".p1").html(p1_val);
+				$(".p2").html(p2_val);
+				$(".p3").html(p3_val);
+			}
+		} else {
+			$(".p1").html(web3.fromWei(Pricing.tone().toString(), 'ether'));
+			$(".p2").html(web3.fromWei(Pricing.ttwo().toString(), 'ether'));
+			$(".p3").html(web3.fromWei(Pricing.tthree().toString(), 'ether'));
+			console.log('User not found');
+		}
+	});
+	
+	// This is simple jquery function to handle button click event
+	$(".price-btn").click(function(){
+		var price = $("span.price", this).html();
+		payNow(price);
+	});
+	
+	function payNow(price){
+		// Convert ether price to wei to send it to contract
+		var _price = web3.toWei(price, 'ether');
+		// You can purchase any package yuou click
+		Pricing.pay({from: web3.eth.defaultAccount, gas: 3000000, value: _price}, function(error, result){
+			// _results variable returns all the values returned from the function either single or multiple.
+			console.log(result);
+			if(result) {
+				$("#packages-list").html('<div class="alert alert-primary mx-auto" role="alert">Successfully paid  '+price+' ETH</div>');
+			} else
+				console.log('Payment not successful');
+		});
+	}
+
+    </script>

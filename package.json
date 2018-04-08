@@ -1,0 +1,19 @@
+{
+  "name": "web3js-solidity-pricing-packages",
+  "version": "1.0.0",
+  "description": "This repository contains simple code written in solidity and web3.js for pricing packages.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "solidity",
+    "web3.js"
+  ],
+  "author": "Muhammad Abid <mohdabid.aks@gmail.com>",
+  "license": "MIT",
+  "repository": "abidaks/web3js-solidity-pricing-packages",
+  "dependencies": {
+    "web3": "github:ethereum/web3.js"
+  }
+}
